@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎄 Rohans Web Search</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --christmas-red: #DB4437;
+      --christmas-green: #0F9D58;
+      --christmas-text: #555;
+      --christmas-bg: #FFFFFF;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--christmas-bg);
+      color: var(--christmas-text);
+    }
+    input.gsc-search-button, button.gsc-search-button {
+      background-color: var(--christmas-green) !important;
+      border-color: var(--christmas-green) !important;
+      color: white !important;
+      height: 44px !important;
+      padding: 0 20px !important;
+      border-radius: 6px !important;
+      transition: background-color 0.2s;
+      font-weight: 500 !important;
+    }
+    input.gsc-search-button:hover, button.gsc-search-button:hover {
+      background-color: #0c8249 !important;
+    }
+    .gsc-input-box {
+      border: 1px solid #ccc !important;
+      border-radius: 6px !important;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    .gsc-input-box:focus-within {
+      border-color: var(--christmas-green) !important;
+      box-shadow: 0 0 0 1px var(--christmas-green) !important;
+    }
+    .gs-webResult .gs-title a.gs-title:link,
+    .gs-webResult .gs-title a.gs-title:visited {
+      color: var(--christmas-red) !important;
+      font-weight: 600 !important;
+    }
+  </style>
+</head>
+<body class="p-4 md:p-8">
+  <div class="max-w-4xl mx-auto flex flex-col items-center pt-20">
+    <div class="mb-8 text-center">
+      <a href="https://www.rohansweb.co.uk" target="_blank"
+         class="block w-full max-w-xl mx-auto transform transition duration-300 hover:scale-105">
+        <img src="https://i.postimg.cc/26qX8w4Y/Gemini-Generated-Image-teo2mkteo2mkteo2-2.jpg"
+             alt="Rohans Web Search Christmas Logo"
+             class="mx-auto w-full rounded-lg shadow-2xl" />
+      </a>
+    </div>
+    <p class="text-xl mb-6 text-center font-light text-gray-500">
+      The festive search experience, powered by Rohan.
+    </p>
+    <div class="flex flex-col items-center mb-12 space-y-4">
+      <div id="countdown" class="text-2xl font-semibold p-3 rounded-lg shadow-md"
+           style="color: var(--christmas-green); border: 2px solid var(--christmas-red);"></div>
+      <div id="joke" class="text-lg italic text-gray-600 max-w-xl text-center"></div>
+    </div>
+    <div class="w-full max-w-2xl">
+      <script async src="https://cse.google.com/cse.js?cx=00c43c37b85874aa1"></script>
+      <div class="gcse-search"></div>
+    </div>
+  </div>
+
+  <script>
+    const jokes = [
+      "What do you call an elf who sings? A wrapper!",
+      "Why did the Christmas tree go to the dentist? Because it needed a root canal!",
+      "What do you get if you cross Santa with a detective? Santa Clues!",
+      "What kind of motor vehicle does Santa drive? A 'Ho Ho Ho-nda'!",
+      "What is a Christmas ornament's favorite song? 'O Tannen-bomb'!",
+      "What is Santa's favorite snack food? Crisp Pringles!",
+      "What do you call a reindeer with no eyes? I have no eye-deer!",
+    ];
+
+    function updateCountdown() {
+      const now = new Date();
+      const christmas = new Date(now.getFullYear(), 11, 25);
+      if (now.getMonth() === 11 && now.getDate() > 25) {
+        christmas.setFullYear(christmas.getFullYear() + 1);
+      }
+      const diff = christmas - now;
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const countdownEl = document.getElementById('countdown');
+      countdownEl.textContent =
+        days < 0 ? "🎄 Merry Christmas! 🎁" :
+        days === 0 ? "🎅 It's Christmas Day! 🥳" :
+        `⏳ ${days} days until Christmas! 🎁`;
+    }
+
+    function displayJoke() {
+      const jokeEl = document.getElementById('joke');
+      const randomIndex = Math.floor(Math.random() * jokes.length);
+      jokeEl.textContent = `Joke of the Day: "${jokes[randomIndex]}"`;
+    }
+
+    // Ensure all search result links open in new tab
+    function forceLinksNewTab() {
+      document.querySelectorAll('.gs-webResult .gs-title a').forEach(link => {
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+      });
+    }
+
+    function setupObserver() {
+      const target = document.querySelector('.gcse-search');
+      if (!target) {
+        setTimeout(setupObserver, 500);
+        return;
+      }
+      forceLinksNewTab();
+      const observer = new MutationObserver(() => forceLinksNewTab());
+      observer.observe(target, { childList: true, subtree: true });
+    }
+
+    window.onload = () => {
+      updateCountdown();
+      displayJoke();
+      setInterval(updateCountdown, 1000 * 60 * 60 * 24);
+      setupObserver();
+    };
+  </script>
+</body>
+</html>
